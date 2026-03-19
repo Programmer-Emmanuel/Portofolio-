@@ -1,0 +1,62 @@
+export const image = {
+    profil : 'images/profil.png',
+    devMobile : 'images/dev-mobile.png',
+    devBackend : 'images/dev-backend.png',
+    uiUx : 'images/ui-ux.png',
+    api : 'images/cloud-api.png',
+    devFront : 'images/front-end.png',
+    optimisation : 'images/optimization.png',
+    ebamage : {
+        couverture : 'images/ebamage/WhatsApp Image 2026-03-19 at 17.16.52.jpeg',
+        image1 : 'images/ebamage/WhatsApp Image 2026-03-19 at 17.08.35.jpeg',
+        image2 : 'images/ebamage/WhatsApp Image 2026-03-19 at 17.08.36.jpeg',
+        image3 : 'images/ebamage/WhatsApp Image 2026-03-19 at 17.08.50.jpeg'
+    },
+    skanfy : {
+        couverture : 'images/skanfy/couverture.png',
+        image1 : 'images/skanfy/img1.png',
+        image2 : 'images/skanfy/img2.png',
+        image3 : 'images/skanfy/img3.png',
+        image4 : 'images/skanfy/img4.png',
+    },
+    ama : {
+        couverture : 'images/ama/couverture.png',
+        image1 : 'images/ama/image1.png'
+    },
+    tdr : {
+        couverture : 'images/tdr/WhatsApp Image 2026-03-19 at 17.33.03.jpeg',
+        image1 : 'images/tdr/image1.png',
+        image2 : 'images/tdr/image2.png',
+        image3 : 'images/tdr/image3.png',
+        image4 : 'images/tdr/image4.png',
+        image5 : 'images/tdr/image5.png',
+    },
+    transfertExpress : {
+        couverture : 'images/transfertExpress/couverture.png',
+        image1 : 'images/transfertExpress/img1.png',
+        image2 : 'images/transfertExpress/img2.png',
+        image3 : 'images/transfertExpress/img3.png',
+        image4 : 'images/transfertExpress/img4.png',
+        image5 : 'images/transfertExpress/img5.png',
+    },
+    emManager : {
+        couverture : 'images/emManager/couverture.png',
+        image1 : 'images/emManager/img1.png',
+        image2 : 'images/emManager/img2.png',
+        image3 : 'images/emManager/img3.png',
+        image4 : 'images/emManager/img4.png',
+        image5 : 'images/emManager/img5.png',
+        image6 : 'images/emManager/img6.png',
+        image7 : 'images/emManager/img7.png',
+        image8 : 'images/emManager/img8.png',
+        image9 : 'images/emManager/img9.png',
+        image10 : 'images/emManager/img10.png',
+        image11 : 'images/emManager/img11.png',
+        image12 : 'images/emManager/img12.png',
+        image13 : 'images/emManager/img13.png',
+        image14 : 'images/emManager/img14.png',
+        image15: 'images/emManager/img15.png',
+        image16: 'images/emManager/img16.png',
+        image17: 'images/emManager/img17.png',
+    }
+};

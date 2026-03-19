@@ -1,0 +1,135 @@
+<!-- contacts.component.html -->
+<div class="relative min-h-screen bg-gray-900 overflow-hidden py-20">
+    
+    <!-- Animated Neural Network Background (filigrane) -->
+    <div class="absolute inset-0 opacity-15">
+        <div class="absolute inset-0">
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-orange-500/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-l from-blue-500/20 to-transparent rounded-full blur-3xl animate-pulse delay-1000"></div>
+            
+            <!-- SVG Neural Network -->
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full">
+                <svg class="w-full h-full" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+                    <g class="animate-pulse">
+                        <circle cx="200" cy="150" r="5" fill="#f97316" class="animate-ping delay-300"/>
+                        <circle cx="600" cy="150" r="5" fill="#3b82f6" class="animate-ping delay-700"/>
+                        <circle cx="150" cy="450" r="5" fill="#8b5cf6" class="animate-ping delay-500"/>
+                        <circle cx="650" cy="450" r="5" fill="#10b981" class="animate-ping delay-200"/>
+                        <circle cx="300" cy="200" r="4" fill="#f97316" class="animate-ping delay-400"/>
+                        <circle cx="500" cy="200" r="4" fill="#f97316" class="animate-ping delay-600"/>
+                        <circle cx="250" cy="350" r="4" fill="#3b82f6" class="animate-ping delay-300"/>
+                        <circle cx="550" cy="350" r="4" fill="#8b5cf6" class="animate-ping delay-700"/>
+                        
+                        <line x1="200" y1="150" x2="300" y2="200" stroke="#f97316" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-200"/>
+                        <line x1="600" y1="150" x2="500" y2="200" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-400"/>
+                        <line x1="150" y1="450" x2="250" y2="350" stroke="#8b5cf6" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-600"/>
+                        <line x1="650" y1="450" x2="550" y2="350" stroke="#10b981" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-800"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Binary rain léger -->
+        <div class="absolute inset-0 opacity-5">
+            <div class="binary-rain"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Titre de section -->
+        <div class="text-center mb-12" data-aos="fade-down" data-aos-duration="800">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                <span class="text-white">Mes </span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-blue-400">
+                    contacts
+                </span>
+            </h2>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                N'hésitez pas à me contacter pour vos projets
+            </p>
+            <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-blue-500 mx-auto rounded-full mt-4"></div>
+        </div>
+        
+        <!-- Grille de contacts -->
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
+            <div *ngFor="let contact of contacts; let i = index" 
+                 class="group"
+                 [attr.data-aos]="'fade-up'"
+                 [attr.data-aos-duration]="'800'"
+                 [attr.data-aos-delay]="100 + (i * 50)">
+                
+                <!-- Carte contact -->
+                <a [href]="contact.lien" 
+                   target="_blank"
+                   class="block bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-orange-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/10 hover:-translate-y-1">
+                    
+                    <div class="flex items-center gap-4">
+                        <!-- Icône avec couleur -->
+                        <div class="w-12 h-12 rounded-lg bg-gray-700/50 p-2 group-hover:scale-110 transition-transform duration-300"
+                             [class.bg-blue-500/10]="contact.couleur === 'blue'"
+                             [class.bg-green-500/10]="contact.couleur === 'green'"
+                             [class.bg-red-500/10]="contact.couleur === 'red'"
+                             [class.bg-gray-500/10]="contact.couleur === 'gray'">
+                            <svg class="w-full h-full" 
+                                 [class.text-blue-400]="contact.couleur === 'blue'"
+                                 [class.text-green-400]="contact.couleur === 'green'"
+                                 [class.text-red-400]="contact.couleur === 'red'"
+                                 [class.text-gray-400]="contact.couleur === 'gray'"
+                                 fill="currentColor" 
+                                 viewBox="0 0 24 24">
+                                <path [attr.d]="contact.icone"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- Informations -->
+                        <div class="flex-1">
+                            <h3 class="text-white font-semibold group-hover:text-orange-400 transition-colors duration-300">
+                                {{ contact.nom }}
+                            </h3>
+                            <p class="text-sm text-gray-400 truncate">{{ contact.valeur }}</p>
+                        </div>
+                        
+                        <!-- Flèche -->
+                        <svg class="w-5 h-5 text-gray-500 group-hover:text-orange-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </div>
+                </a>
+                
+                <!-- Bouton copier pour téléphone/email (optionnel) -->
+                <!-- EMAIL -->
+                <div *ngIf="contact.nom === 'Email'" class="mt-2 flex justify-end">
+                    <button (click)="copyToClipboard(contact.valeur, 'email')"
+                            class="text-xs text-gray-500 hover:text-orange-400 transition-colors flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+                        </svg>
+                        Copier {{ texte_email }}
+                    </button>
+                </div>
+
+                <!-- WHATSAPP -->
+                <div *ngIf="contact.nom.includes('WhatsApp')" class="mt-2 flex justify-end">
+                    <button (click)="copyToClipboard(contact.valeur, 'whatsapp')"
+                            class="text-xs text-gray-500 hover:text-orange-400 transition-colors flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+                        </svg>
+                        Copier {{ texte_whatsapp }}
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Message de fin -->
+        <div class="text-center mt-16" data-aos="fade-up" data-aos-duration="800" data-aos-delay="500">
+            <p class="text-gray-300 text-lg">
+                Disponible pour discuter de vos projets et opportunités
+            </p>
+        </div>
+    </div>
+</div>

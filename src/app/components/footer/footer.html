@@ -1,0 +1,31 @@
+<!-- footer.component.html -->
+<footer class="bg-gray-900 border-t border-gray-800 py-8">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            
+            <!-- Logo -->
+            <div class="flex-shrink-0">
+                <a routerLink="/" class="text-white font-mono text-xl italic hover:text-orange-400 transition-all duration-300 ease-in-out transform hover:scale-105">
+                    &lt;Dev Emmanuel/&gt;
+                </a>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="text-gray-400 text-sm">
+                © {{ currentYear }} Tous droits réservés
+            </div>
+            
+            <!-- Social Icons -->
+            <div class="flex items-center gap-4">
+                <a *ngFor="let social of socialLinks" 
+                   [href]="social.lien" 
+                   target="_blank"
+                   class="text-gray-400 hover:text-orange-400 transition-colors duration-300">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path [attr.d]="social.icone"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>

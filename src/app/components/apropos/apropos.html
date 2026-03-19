@@ -1,0 +1,207 @@
+<!-- about.component.html -->
+<div class="relative min-h-screen bg-gray-900 overflow-hidden">
+    <!-- Animated Neural Network Background (uniquement) -->
+    <div class="absolute inset-0 opacity-20">
+        <!-- Neural network lines animation -->
+        <div class="absolute inset-0">
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-orange-500/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-l from-blue-500/20 to-transparent rounded-full blur-3xl animate-pulse delay-1000"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full">
+                <svg class="w-full h-full" viewBox="0 0 800 600">
+                    <!-- Neural network connections - Réseau dense -->
+                    <g class="animate-pulse">
+                        <!-- Nœuds principaux (plus gros) -->
+                        <circle cx="400" cy="300" r="6" fill="#f97316" class="animate-ping"/>
+                        <circle cx="200" cy="150" r="5" fill="#3b82f6" class="animate-ping delay-300"/>
+                        <circle cx="600" cy="150" r="5" fill="#8b5cf6" class="animate-ping delay-700"/>
+                        <circle cx="150" cy="450" r="5" fill="#10b981" class="animate-ping delay-500"/>
+                        <circle cx="650" cy="450" r="5" fill="#ec4899" class="animate-ping delay-200"/>
+                        
+                        <!-- Nœuds secondaires -->
+                        <circle cx="300" cy="200" r="4" fill="#f97316" class="animate-ping delay-400"/>
+                        <circle cx="500" cy="200" r="4" fill="#f97316" class="animate-ping delay-600"/>
+                        <circle cx="250" cy="350" r="4" fill="#3b82f6" class="animate-ping delay-300"/>
+                        <circle cx="550" cy="350" r="4" fill="#8b5cf6" class="animate-ping delay-700"/>
+                        <circle cx="350" cy="400" r="4" fill="#10b981" class="animate-ping delay-500"/>
+                        <circle cx="450" cy="400" r="4" fill="#ec4899" class="animate-ping delay-200"/>
+                        
+                        <!-- Nœuds tertiaires (pour densifier) -->
+                        <circle cx="250" cy="250" r="3" fill="#f97316" class="animate-ping delay-400"/>
+                        <circle cx="550" cy="250" r="3" fill="#3b82f6" class="animate-ping delay-600"/>
+                        <circle cx="320" cy="320" r="3" fill="#8b5cf6" class="animate-ping delay-300"/>
+                        <circle cx="480" cy="320" r="3" fill="#10b981" class="animate-ping delay-700"/>
+                        <circle cx="280" cy="400" r="3" fill="#ec4899" class="animate-ping delay-500"/>
+                        <circle cx="520" cy="400" r="3" fill="#f97316" class="animate-ping delay-200"/>
+                        
+                        <!-- Connexions principales (plus épaisses) -->
+                        <line x1="400" y1="300" x2="200" y2="150" stroke="#f97316" stroke-width="2" stroke-opacity="0.3" class="animate-pulse"/>
+                        <line x1="400" y1="300" x2="600" y2="150" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.3" class="animate-pulse delay-300"/>
+                        <line x1="400" y1="300" x2="150" y2="450" stroke="#8b5cf6" stroke-width="2" stroke-opacity="0.3" class="animate-pulse delay-500"/>
+                        <line x1="400" y1="300" x2="650" y2="450" stroke="#10b981" stroke-width="2" stroke-opacity="0.3" class="animate-pulse delay-700"/>
+                        
+                        <!-- Connexions secondaires -->
+                        <line x1="200" y1="150" x2="300" y2="200" stroke="#f97316" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-200"/>
+                        <line x1="600" y1="150" x2="500" y2="200" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-400"/>
+                        <line x1="150" y1="450" x2="250" y2="350" stroke="#8b5cf6" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-600"/>
+                        <line x1="650" y1="450" x2="550" y2="350" stroke="#10b981" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-800"/>
+                        
+                        <!-- Connexions tertiaires -->
+                        <line x1="300" y1="200" x2="250" y2="250" stroke="#f97316" stroke-width="1" stroke-opacity="0.2" class="animate-pulse delay-300"/>
+                        <line x1="500" y1="200" x2="550" y2="250" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.2" class="animate-pulse delay-500"/>
+                        <line x1="250" y1="350" x2="280" y2="400" stroke="#8b5cf6" stroke-width="1" stroke-opacity="0.2" class="animate-pulse delay-700"/>
+                        <line x1="550" y1="350" x2="520" y2="400" stroke="#10b981" stroke-width="1" stroke-opacity="0.2" class="animate-pulse delay-200"/>
+                        <line x1="320" y1="320" x2="350" y2="400" stroke="#ec4899" stroke-width="1" stroke-opacity="0.2" class="animate-pulse delay-400"/>
+                        <line x1="480" y1="320" x2="450" y2="400" stroke="#f97316" stroke-width="1" stroke-opacity="0.2" class="animate-pulse delay-600"/>
+                        
+                        <!-- Connexions croisées (pour effet de réseau dense) -->
+                        <line x1="200" y1="150" x2="250" y2="250" stroke="#f97316" stroke-width="0.8" stroke-opacity="0.15" class="animate-pulse delay-400"/>
+                        <line x1="600" y1="150" x2="550" y2="250" stroke="#3b82f6" stroke-width="0.8" stroke-opacity="0.15" class="animate-pulse delay-600"/>
+                        <line x1="150" y1="450" x2="280" y2="400" stroke="#8b5cf6" stroke-width="0.8" stroke-opacity="0.15" class="animate-pulse delay-800"/>
+                        <line x1="650" y1="450" x2="520" y2="400" stroke="#10b981" stroke-width="0.8" stroke-opacity="0.15" class="animate-pulse delay-200"/>
+                        <line x1="300" y1="200" x2="320" y2="320" stroke="#ec4899" stroke-width="0.8" stroke-opacity="0.15" class="animate-pulse delay-300"/>
+                        <line x1="500" y1="200" x2="480" y2="320" stroke="#f97316" stroke-width="0.8" stroke-opacity="0.15" class="animate-pulse delay-500"/>
+                        <line x1="250" y1="350" x2="320" y2="320" stroke="#3b82f6" stroke-width="0.8" stroke-opacity="0.15" class="animate-pulse delay-700"/>
+                        <line x1="550" y1="350" x2="480" y2="320" stroke="#8b5cf6" stroke-width="0.8" stroke-opacity="0.15" class="animate-pulse delay-200"/>
+                    </g>
+                    
+                    <!-- Nœuds périphériques supplémentaires (effet de profondeur) -->
+                    <g class="animate-pulse">
+                        <circle cx="80" cy="80" r="2" fill="#f97316" opacity="0.3" class="animate-ping delay-400"/>
+                        <circle cx="720" cy="80" r="2" fill="#3b82f6" opacity="0.3" class="animate-ping delay-600"/>
+                        <circle cx="80" cy="520" r="2" fill="#8b5cf6" opacity="0.3" class="animate-ping delay-800"/>
+                        <circle cx="720" cy="520" r="2" fill="#10b981" opacity="0.3" class="animate-ping delay-200"/>
+                        <circle cx="120" cy="200" r="2" fill="#ec4899" opacity="0.3" class="animate-ping delay-500"/>
+                        <circle cx="680" cy="200" r="2" fill="#f97316" opacity="0.3" class="animate-ping delay-300"/>
+                        <circle cx="120" cy="400" r="2" fill="#3b82f6" opacity="0.3" class="animate-ping delay-700"/>
+                        <circle cx="680" cy="400" r="2" fill="#8b5cf6" opacity="0.3" class="animate-ping delay-400"/>
+                        
+                        <!-- Connexions vers les nœuds périphériques -->
+                        <line x1="200" y1="150" x2="80" y2="80" stroke="#f97316" stroke-width="0.5" stroke-opacity="0.1" class="animate-pulse delay-400"/>
+                        <line x1="600" y1="150" x2="720" y2="80" stroke="#3b82f6" stroke-width="0.5" stroke-opacity="0.1" class="animate-pulse delay-600"/>
+                        <line x1="150" y1="450" x2="80" y2="520" stroke="#8b5cf6" stroke-width="0.5" stroke-opacity="0.1" class="animate-pulse delay-800"/>
+                        <line x1="650" y1="450" x2="720" y2="520" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.1" class="animate-pulse delay-200"/>
+                        <line x1="200" y1="150" x2="120" y2="200" stroke="#ec4899" stroke-width="0.5" stroke-opacity="0.1" class="animate-pulse delay-500"/>
+                        <line x1="600" y1="150" x2="680" y2="200" stroke="#f97316" stroke-width="0.5" stroke-opacity="0.1" class="animate-pulse delay-300"/>
+                        <line x1="150" y1="450" x2="120" y2="400" stroke="#3b82f6" stroke-width="0.5" stroke-opacity="0.1" class="animate-pulse delay-700"/>
+                        <line x1="650" y1="450" x2="680" y2="400" stroke="#8b5cf6" stroke-width="0.5" stroke-opacity="0.1" class="animate-pulse delay-400"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Binary rain effect très léger -->
+        <div class="absolute inset-0 opacity-5">
+            <div class="binary-rain"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">
+        
+        <!-- Section À propos -->
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- Titre -->
+            <div class="text-center mb-12" data-aos="fade-down" data-aos-duration="800">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="text-white">À propos de </span>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-blue-400">
+                        moi
+                    </span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-blue-500 mx-auto rounded-full"></div>
+            </div>
+            
+            <!-- Contenu principal -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Colonne gauche - Photo ou illustration -->
+                <div class="relative" data-aos="fade-right" data-aos-duration="1000">
+                    <div class="relative rounded-2xl overflow-hidden border border-gray-800 shadow-2xl">
+                        <!-- Overlay gradient -->
+                        <div class="absolute inset-0 bg-gradient-to-tr from-orange-500/10 to-blue-500/10"></div>
+                        
+                        <!-- Image de profil ou illustration -->
+                        <div class="aspect-square bg-gray-800 flex items-center justify-center">
+                            <svg class="w-48 h-48 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- Badges de technologies flottants -->
+                        <div class="absolute top-4 left-4 animate-float">
+                            <span class="bg-orange-500/90 text-white px-3 py-1 rounded-full text-xs font-mono">Laravel</span>
+                        </div>
+                        <div class="absolute top-4 right-4 animate-float delay-300">
+                            <span class="bg-blue-500/90 text-white px-3 py-1 rounded-full text-xs font-mono">React</span>
+                        </div>
+                        <div class="absolute bottom-4 left-4 animate-float delay-500">
+                            <span class="bg-purple-500/90 text-white px-3 py-1 rounded-full text-xs font-mono">Angular</span>
+                        </div>
+                        <div class="absolute bottom-4 right-4 animate-float delay-700">
+                            <span class="bg-cyan-500/90 text-white px-3 py-1 rounded-full text-xs font-mono">React Native</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Colonne droite - Description -->
+                <div class="space-y-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+                    <div class="space-y-4 text-gray-300 text-lg leading-relaxed">
+                        <p>
+                            Je suis <span class="text-white font-semibold">Emmanuel Bamidélé</span>, 
+                            <span class="text-orange-400 font-semibold">Développeur fullstack web et mobile</span>, 
+                            avec une orientation backend centrée sur <span class="text-orange-400 font-semibold">Laravel</span>.
+                        </p>
+                        
+                        <p>
+                            J'utilise <span class="text-blue-400 font-semibold">React.js</span> et 
+                            <span class="text-red-400 font-semibold">Angular</span> pour le développement frontend web, 
+                            et <span class="text-cyan-400 font-semibold">React Native</span> pour les applications mobiles.
+                        </p>
+                        
+                        <p>
+                            À l'aise avec la conception d'API, l'intégration de services et la création d'interfaces modernes, 
+                            responsives et performantes. Je m'efforce de construire des solutions robustes et évolutives 
+                            qui répondent aux besoins réels des utilisateurs.
+                        </p>
+                        
+                        <p>
+                            Mon approche allie <span class="text-orange-400">rigueur technique</span> et 
+                            <span class="text-blue-400">sens de l'esthétique</span>, pour offrir des expériences 
+                            utilisateur fluides et intuitives. Je suis constamment à l'affût des nouvelles technologies 
+                            pour améliorer mes compétences et livrer des produits de qualité.
+                        </p>
+                    </div>
+                    
+                    <!-- Statistiques rapides -->
+                    <div class="grid grid-cols-3 gap-4 pt-4">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-orange-400">3+</div>
+                            <div class="text-sm text-gray-400">Années d'exp.</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-blue-400">10+</div>
+                            <div class="text-sm text-gray-400">Projets</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-purple-400">10+</div>
+                            <div class="text-sm text-gray-400">Technos</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Boutons -->
+                    <div class="flex flex-wrap justify-center pt-4">
+                        <button class="group relative inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg font-medium shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 hover:scale-105 overflow-hidden">
+                            <span class="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                            <span class="relative flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                Voir mes projets
+                            </span>
+                        </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

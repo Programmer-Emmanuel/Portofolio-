@@ -1,0 +1,166 @@
+<!-- projets.component.html -->
+<div class="relative min-h-screen bg-gray-900 overflow-hidden py-20">
+    
+    <!-- Animated Neural Network Background -->
+    <div class="absolute inset-0 opacity-15">
+        <div class="absolute inset-0">
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-orange-500/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-l from-blue-500/20 to-transparent rounded-full blur-3xl animate-pulse delay-1000"></div>
+            
+            <!-- SVG Neural Network -->
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full">
+                <svg class="w-full h-full" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+                    <g class="animate-pulse">
+                        <circle cx="200" cy="150" r="5" fill="#f97316" class="animate-ping delay-300"/>
+                        <circle cx="600" cy="150" r="5" fill="#3b82f6" class="animate-ping delay-700"/>
+                        <circle cx="150" cy="450" r="5" fill="#8b5cf6" class="animate-ping delay-500"/>
+                        <circle cx="650" cy="450" r="5" fill="#10b981" class="animate-ping delay-200"/>
+                        <circle cx="300" cy="200" r="4" fill="#f97316" class="animate-ping delay-400"/>
+                        <circle cx="500" cy="200" r="4" fill="#f97316" class="animate-ping delay-600"/>
+                        <circle cx="250" cy="350" r="4" fill="#3b82f6" class="animate-ping delay-300"/>
+                        <circle cx="550" cy="350" r="4" fill="#8b5cf6" class="animate-ping delay-700"/>
+                        
+                        <line x1="200" y1="150" x2="300" y2="200" stroke="#f97316" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-200"/>
+                        <line x1="600" y1="150" x2="500" y2="200" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-400"/>
+                        <line x1="150" y1="450" x2="250" y2="350" stroke="#8b5cf6" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-600"/>
+                        <line x1="650" y1="450" x2="550" y2="350" stroke="#10b981" stroke-width="1.5" stroke-opacity="0.25" class="animate-pulse delay-800"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Binary rain léger -->
+        <div class="absolute inset-0 opacity-5">
+            <div class="binary-rain"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Titre de section -->
+        <div class="text-center mb-12" data-aos="fade-down" data-aos-duration="800">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                <span class="text-white">Quelques </span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-blue-400">
+                    projets
+                </span>
+            </h2>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                Découvrez une sélection de mes réalisations récentes
+            </p>
+            <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-blue-500 mx-auto rounded-full mt-4"></div>
+        </div>
+        
+        <!-- Grille de projets -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div *ngFor="let projet of projets; let i = index" 
+                 class="group cursor-pointer" 
+                 [attr.data-aos]="'fade-up'"
+                 [attr.data-aos-duration]="'800'"
+                 [attr.data-aos-delay]="100 + (i * 50)"
+                 (click)="openModal(projet)">
+                
+                <!-- Carte projet -->
+                <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 hover:border-orange-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-orange-500/20 hover:-translate-y-2 h-full">
+                    
+                    <!-- Image de couverture -->
+                    <div class="relative h-48 overflow-hidden">
+                        <img [src]="projet.image_couverture" [alt]="projet.titre" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        
+                        <!-- Overlay au survol -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        
+                        <!-- Badge nombre d'images -->
+                        <div class="absolute top-2 right-2 bg-gray-900/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full">
+                            {{ projet.autres_images.length + 1 }} images
+                        </div>
+                    </div>
+                    
+                    <!-- Contenu -->
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-orange-400 transition-colors duration-300">
+                            {{ projet.titre }}
+                        </h3>
+                        
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">
+                            {{ projet.description }}
+                        </p>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal avec carrousel -->
+    <div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4" (click)="closeModal()">
+        <!-- Overlay sombre -->
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
+        
+        <!-- Contenu modal -->
+        <div class="relative max-w-5xl w-full bg-gray-900 rounded-2xl overflow-hidden border border-gray-800"
+             (click)="$event.stopPropagation()">
+            
+            <!-- En-tête -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-800">
+                <h3 class="text-xl font-bold text-white">{{ selectedProjet?.titre }}</h3>
+                <button (click)="closeModal()" class="text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Carrousel -->
+            <div class="relative bg-gray-800/50">
+                <!-- Image principale -->
+                <div class="relative h-[400px] md:h-[500px] overflow-hidden">
+                    <img [src]="getCurrentImage()" [alt]="selectedProjet?.titre" 
+                         class="w-full h-full object-contain">
+                    
+                    <!-- Flèches navigation -->
+                    <button (click)="prevImage()" 
+                            class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-900/80 rounded-full flex items-center justify-center text-white hover:bg-orange-500 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    
+                    <button (click)="nextImage()" 
+                            class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-900/80 rounded-full flex items-center justify-center text-white hover:bg-orange-500 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Miniatures -->
+                <div class="flex gap-2 p-4 overflow-x-auto bg-gray-900/50">
+                    <div *ngFor="let image of [selectedProjet?.image_couverture, ...(selectedProjet?.autres_images || [])]; let idx = index"
+                         (click)="currentImageIndex = idx"
+                         class="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden cursor-pointer border-2 transition-colors"
+                         [class.border-orange-500]="currentImageIndex === idx"
+                         [class.border-transparent]="currentImageIndex !== idx"
+                         [class.hover:border-orange-400]="currentImageIndex !== idx">
+                        <img [src]="image" [alt]="'Miniature ' + idx" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pied -->
+            <div class="p-4 border-t border-gray-800 flex items-center justify-between">                
+                <a [href]="selectedProjet?.lien" 
+                   target="_blank"
+                   class="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                    Voir le projet
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

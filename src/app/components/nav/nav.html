@@ -1,0 +1,155 @@
+<!-- navbar.component.html -->
+<nav class="sticky top-0 w-full bg-gray-900 backdrop-blur-sm border-b border-gray-800 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo -->
+            <div class="flex-shrink-0">
+                <a routerLink="/" class="text-white font-mono text-xl italic hover:text-orange-400 transition-all duration-300 ease-in-out transform hover:scale-105">
+                    &lt;Dev Emmanuel/&gt;
+                </a>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:block">
+                <div class="ml-10 flex items-center space-x-8">
+                    <!-- À propos avec # au survol sans déplacement -->
+                    <a routerLink="/" 
+                        fragment="apropos"
+                       routerLinkActive="text-orange-400" 
+                       [routerLinkActiveOptions]="{exact: true}"
+                       class="group text-white px-3 py-2 text-sm font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                        <span class="relative inline-block">
+                            <span class="invisible group-hover:visible absolute -left-3 top-0">#</span>
+                            À propos
+                        </span>
+                    </a>
+                    
+                    <!-- Compétences avec # au survol sans déplacement -->
+                    <a routerLink="/" 
+                        fragment="competence" 
+                       routerLinkActive="text-orange-400"
+                       class="group text-white px-3 py-2 text-sm font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                        <span class="relative inline-block">
+                            <span class="invisible group-hover:visible absolute -left-3 top-0">#</span>
+                            Compétences
+                        </span>
+                    </a>
+                    
+                    <!-- Projets avec # au survol sans déplacement -->
+                    <a routerLink="/" 
+                        fragment="projet"
+                       routerLinkActive="text-orange-400"
+                       class="group text-white px-3 py-2 text-sm font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                        <span class="relative inline-block">
+                            <span class="invisible group-hover:visible absolute -left-3 top-0">#</span>
+                            Projets
+                        </span>
+                    </a>
+                    
+                    <!-- Expérience avec # au survol sans déplacement -->
+                    <a routerLink="/" 
+                        fragment="experience"
+                       routerLinkActive="text-orange-400"
+                       class="group text-white px-3 py-2 text-sm font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                        <span class="relative inline-block">
+                            <span class="invisible group-hover:visible absolute -left-3 top-0">#</span>
+                            Expérience
+                        </span>
+                    </a>
+                    
+                    <!-- Contacts avec # au survol sans déplacement -->
+                    <a routerLink="/" 
+                        fragment="contact"
+                       routerLinkActive="text-orange-400"
+                       class="group text-white px-3 py-2 text-sm font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                        <span class="relative inline-block">
+                            <span class="invisible group-hover:visible absolute -left-3 top-0">#</span>
+                            Contacts
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden">
+                <button (click)="toggleMobileMenu()" class="text-white hover:text-orange-400 focus:outline-none transition-colors duration-300">
+                    <svg *ngIf="!isMobileMenuOpen" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                    <svg *ngIf="isMobileMenuOpen" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile menu with slide down animation -->
+    <div class="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
+         [class.max-h-96]="isMobileMenuOpen"
+         [class.max-h-0]="!isMobileMenuOpen">
+        
+        <div class="bg-gray-900 border-t border-gray-800 py-4">
+            <!-- Mobile menu links avec # au survol sans déplacement -->
+            <a routerLink="/" 
+                fragment="apropos" 
+               routerLinkActive="text-orange-400" 
+               (click)="closeMobileMenu()"
+               class="group block py-3 px-4 text-base font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                <span class="relative inline-block">
+                    <span class="invisible group-hover:visible absolute -left-4 top-0">#</span>
+                    <span class="text-white">À propos</span>
+                    
+                </span>
+            </a>
+            
+            <a routerLink="/" 
+                fragment="competence"
+               routerLinkActive="text-orange-400"
+               (click)="closeMobileMenu()"
+               class="group block py-3 px-4 text-base font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                <span class="relative inline-block">
+                    <span class="invisible group-hover:visible absolute -left-4 top-0">#</span>
+                    <span class="text-white">Competences</span>
+                    
+                </span>
+            </a>
+            
+            <a routerLink="/" 
+                fragment="projet"
+               routerLinkActive="text-orange-400"
+               (click)="closeMobileMenu()"
+               class="group block py-3 px-4 text-base font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                <span class="relative inline-block">
+                    <span class="invisible group-hover:visible absolute -left-4 top-0">#</span>
+                    <span class="text-white">Projets</span>
+                    
+                </span>
+            </a>
+            
+            <a routerLink="/" 
+                fragment="experience"
+               routerLinkActive="text-orange-400"
+               (click)="closeMobileMenu()"
+               class="group block py-3 px-4 text-base font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                <span class="relative inline-block">
+                    <span class="invisible group-hover:visible absolute -left-4 top-0">#</span>
+                    <span class="text-white">Expérience</span>
+                    
+                </span>
+            </a>
+            
+            <a routerLink="/" 
+                fragment="contact"
+               routerLinkActive="text-orange-400"
+               (click)="closeMobileMenu()"
+               class="group block py-3 px-4 text-base font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                <span class="relative inline-block">
+                    <span class="invisible group-hover:visible absolute -left-4 top-0">#</span>
+                    <span class="text-white">Contacts</span>
+                    
+                </span>
+            </a>
+        </div>
+    </div>
+</nav>
