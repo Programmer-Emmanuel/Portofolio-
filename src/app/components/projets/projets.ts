@@ -9,7 +9,7 @@ interface Projet {
   titre: string;
   image_couverture: string;
   autres_images: string[];
-  lien: string;
+  lien: string | null;
   description: string;
 }
 

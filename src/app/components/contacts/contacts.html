@@ -53,9 +53,9 @@
         </div>
         
         <!-- Grille de contacts -->
-        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
             <div *ngFor="let contact of contacts; let i = index" 
-                 class="group"
+                 class="group w-full"
                  [attr.data-aos]="'fade-up'"
                  [attr.data-aos-duration]="'800'"
                  [attr.data-aos-delay]="100 + (i * 50)">
@@ -63,11 +63,11 @@
                 <!-- Carte contact -->
                 <a [href]="contact.lien" 
                    target="_blank"
-                   class="block bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-orange-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/10 hover:-translate-y-1">
+                   class="block bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 sm:p-5 border border-gray-700 hover:border-orange-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/10 hover:-translate-y-1">
                     
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3 sm:gap-4">
                         <!-- Icône avec couleur -->
-                        <div class="w-12 h-12 rounded-lg bg-gray-700/50 p-2 group-hover:scale-110 transition-transform duration-300"
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gray-700/50 p-2 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
                              [class.bg-blue-500/10]="contact.couleur === 'blue'"
                              [class.bg-green-500/10]="contact.couleur === 'green'"
                              [class.bg-red-500/10]="contact.couleur === 'red'"
@@ -83,16 +83,16 @@
                             </svg>
                         </div>
                         
-                        <!-- Informations -->
-                        <div class="flex-1">
-                            <h3 class="text-white font-semibold group-hover:text-orange-400 transition-colors duration-300">
+                        <!-- Informations avec gestion du débordement -->
+                        <div class="flex-1 min-w-0"> <!-- min-w-0 important pour le truncate -->
+                            <h3 class="text-white font-semibold group-hover:text-orange-400 transition-colors duration-300 text-sm sm:text-base truncate">
                                 {{ contact.nom }}
                             </h3>
-                            <p class="text-sm text-gray-400 truncate">{{ contact.valeur }}</p>
+                            <p class="text-xs sm:text-sm text-gray-400 truncate max-w-full">{{ contact.valeur }}</p>
                         </div>
                         
                         <!-- Flèche -->
-                        <svg class="w-5 h-5 text-gray-500 group-hover:text-orange-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 group-hover:text-orange-400 transition-colors duration-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                         </svg>
                     </div>
@@ -127,7 +127,7 @@
         
         <!-- Message de fin -->
         <div class="text-center mt-16" data-aos="fade-up" data-aos-duration="800" data-aos-delay="500">
-            <p class="text-gray-300 text-lg">
+            <p class="text-gray-300 text-base sm:text-lg px-4">
                 Disponible pour discuter de vos projets et opportunités
             </p>
         </div>
