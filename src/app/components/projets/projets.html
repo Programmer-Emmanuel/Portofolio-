@@ -96,77 +96,77 @@
     </div>
 
     <!-- Modal avec carrousel -->
-    <div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4" (click)="closeModal()">
-        <!-- Overlay sombre -->
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
+    <!-- Modal avec carrousel - Version réduite -->
+<div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4" (click)="closeModal()">
+    <!-- Overlay sombre -->
+    <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
+    
+    <!-- Contenu modal - taille réduite en desktop -->
+    <div class="relative w-full max-w-4xl lg:max-w-3xl xl:max-w-2xl bg-gray-900 rounded-2xl overflow-hidden border border-gray-800 mx-4"
+         (click)="$event.stopPropagation()">
         
-        <!-- Contenu modal -->
-        <div class="relative max-w-5xl w-full bg-gray-900 rounded-2xl overflow-hidden border border-gray-800"
-             (click)="$event.stopPropagation()">
-            
-            <!-- En-tête -->
-            <div class="flex items-center justify-between p-4 border-b border-gray-800">
-                <h3 class="text-xl font-bold text-white">{{ selectedProjet?.titre }}</h3>
-                <button (click)="closeModal()" class="text-gray-400 hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        <!-- En-tête -->
+        <div class="flex items-center justify-between p-4 border-b border-gray-800">
+            <h3 class="text-lg md:text-xl font-bold text-white truncate max-w-[80%]">{{ selectedProjet?.titre }}</h3>
+            <button (click)="closeModal()" class="text-gray-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Carrousel -->
+        <div class="relative bg-gray-800/50">
+            <!-- Image principale - hauteur réduite -->
+            <div class="relative h-[300px] md:h-[400px] lg:h-[350px] overflow-hidden">
+                <img [src]="getCurrentImage()" [alt]="selectedProjet?.titre" 
+                     class="w-full h-full object-contain">
+                
+                <!-- Flèches navigation - plus petites -->
+                <button (click)="prevImage()" 
+                        class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 bg-gray-900/80 rounded-full flex items-center justify-center text-white hover:bg-orange-500 transition-colors">
+                    <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                
+                <button (click)="nextImage()" 
+                        class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 bg-gray-900/80 rounded-full flex items-center justify-center text-white hover:bg-orange-500 transition-colors">
+                    <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </button>
             </div>
             
-            <!-- Carrousel -->
-            <div class="relative bg-gray-800/50">
-                <!-- Image principale -->
-                <div class="relative h-[400px] md:h-[500px] overflow-hidden">
-                    <img [src]="getCurrentImage()" [alt]="selectedProjet?.titre" 
-                         class="w-full h-full object-contain">
-                    
-                    <!-- Flèches navigation -->
-                    <button (click)="prevImage()" 
-                            class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-900/80 rounded-full flex items-center justify-center text-white hover:bg-orange-500 transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                    </button>
-                    
-                    <button (click)="nextImage()" 
-                            class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-900/80 rounded-full flex items-center justify-center text-white hover:bg-orange-500 transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </button>
+            <!-- Miniatures - plus compactes -->
+            <div class="flex gap-2 p-3 overflow-x-auto bg-gray-900/50">
+                <div *ngFor="let image of [selectedProjet?.image_couverture, ...(selectedProjet?.autres_images || [])]; let idx = index"
+                     (click)="currentImageIndex = idx"
+                     class="w-12 h-12 md:w-14 md:h-14 flex-shrink-0 rounded-lg overflow-hidden cursor-pointer border-2 transition-colors"
+                     [class.border-orange-500]="currentImageIndex === idx"
+                     [class.border-transparent]="currentImageIndex !== idx"
+                     [class.hover:border-orange-400]="currentImageIndex !== idx">
+                    <img [src]="image" [alt]="'Miniature ' + idx" class="w-full h-full object-cover">
                 </div>
-                
-                <!-- Miniatures -->
-                <div class="flex gap-2 p-4 overflow-x-auto bg-gray-900/50">
-                    <div *ngFor="let image of [selectedProjet?.image_couverture, ...(selectedProjet?.autres_images || [])]; let idx = index"
-                         (click)="currentImageIndex = idx"
-                         class="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden cursor-pointer border-2 transition-colors"
-                         [class.border-orange-500]="currentImageIndex === idx"
-                         [class.border-transparent]="currentImageIndex !== idx"
-                         [class.hover:border-orange-400]="currentImageIndex !== idx">
-                        <img [src]="image" [alt]="'Miniature ' + idx" class="w-full h-full object-cover">
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Pied -->
-            <div class="p-4 border-t border-gray-800 flex items-center justify-between">                
-                <a 
-                    [href]="selectedProjet?.lien || null"
-                    [attr.target]="selectedProjet?.lien ? '_blank' : null"
-                    [class.pointer-events-none]="!selectedProjet?.lien"
-                    [class.opacity-50]="!selectedProjet?.lien"
-                    class="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2">
-                    
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                        </svg>
-
-                        Voir le projet
-                    </a>
             </div>
         </div>
+        
+        <!-- Pied - plus compact -->
+        <div class="p-4 border-t border-gray-800 flex items-center justify-end">                
+            <a 
+                [href]="selectedProjet?.lien || null"
+                [attr.target]="selectedProjet?.lien ? '_blank' : null"
+                [class.pointer-events-none]="!selectedProjet?.lien"
+                [class.opacity-50]="!selectedProjet?.lien"
+                class="px-5 py-2 md:px-6 md:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2 text-sm md:text-base">
+                
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+                Voir le projet
+            </a>
+        </div>
     </div>
+</div>
 </div>
