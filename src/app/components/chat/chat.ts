@@ -31,14 +31,15 @@ export default class Chat implements OnInit, AfterViewChecked {
   
   // Exemples de questions pour l'utilisateur
   exampleQuestions: string[] = [
+    "Qui est Emmanuel Bamidélé",
     "Quelles sont ses compétences techniques ?",
     "Comment contacter Emmanuel ?",
     "Est-il disponible pour des missions freelance ?",
     "Quelles sont ses expériences professionnelles ?",
     "Quels projets a-t-il réalisés ?",
-    "Quelles technologies utilise-t-il pour le backend ?",
+    "Quelles technologies utilise-t-il ?",
     "Fait-il du développement mobile ?",
-    "Où est-il basé ?"
+    "Où est-il basé ?",
   ];
   
   // Informations personnelles pour le chatbot
@@ -67,11 +68,12 @@ export default class Chat implements OnInit, AfterViewChecked {
       '2ème Place au YADAC ROBOTICS CHALLENGE (2025)',
     ],
     projets: [
-      'Plateforme E-commerce avec Angular et Laravel',
-      'Application de gestion de tâches collaborative avec React et Node.js',
-      'Dashboard Analytics avec Angular et D3.js',
-      'Application mobile Fitness avec React Native et Firebase',
-      'API de paiement sécurisée avec Laravel et Stripe'
+      'Application mobile e-commerce complète avec panier, suivi des commandes et interface interactive.',
+      'Application web de recupération des objets perdus développement de la génération dynamique de codes QR personnalisés, associés à chaque objet, avec mise en place du système de signalement après scan.',
+      'Application web international de prise de rendez-vous médicaux.',
+      'Application web/mobile de lutte contre le gaspillage alimentaire, connectant restaurants et clients pour la vente d’invendus à prix réduit.',
+      'Application web simulant le transfert d’argent d’une personne X à une personne Y de manière fluide.',
+      'Application web complète développée avec Laravel qui centralise la gestion des ressources humaines, des employés, des congés, des finances et de la communication interne grâce à un tableau de bord interactif, des workflows automatisés et des fonctionnalités intelligentes basées sur l’IA',
     ],
     disponibilite: 'Disponible pour missions freelance et opportunités professionnelles',
     bio: 'Développeur fullstack orienté backend, passionné par la création d\'architectures robustes et d\'APIs performantes. J\'utilise Laravel, React, Angular et React Native pour créer des applications modernes.'
