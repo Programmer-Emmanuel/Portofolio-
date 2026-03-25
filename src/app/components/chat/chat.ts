@@ -31,7 +31,7 @@ export default class Chat implements OnInit, AfterViewChecked {
   
   // Exemples de questions pour l'utilisateur
   exampleQuestions: string[] = [
-    "Qui est Emmanuel Bamidélé",
+    "Qui est Emmanuel Bamidélé ?",
     "Quelles sont ses compétences techniques ?",
     "Comment contacter Emmanuel ?",
     "Est-il disponible pour des missions freelance ?",
