@@ -65,8 +65,6 @@ export default class Chat implements OnInit, AfterViewChecked {
     experiences: [
       'Stage à NEURA COMPUTING - Développeur fullstack (2025)',
       '2ème Place au YADAC ROBOTICS CHALLENGE (2025)',
-      'HACKATHON IA4DEV - 1ère Place (2024)',
-      'Stage à DIGITAL SOLUTION - Développeur frontend (2024)'
     ],
     projets: [
       'Plateforme E-commerce avec Angular et Laravel',
