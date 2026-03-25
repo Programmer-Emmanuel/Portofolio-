@@ -9,10 +9,11 @@ import { Projets } from '../../components/projets/projets';
 import { Experiences } from '../../components/experiences/experiences';
 import { Contacts } from '../../components/contacts/contacts';
 import { Footer } from '../../components/footer/footer';
+import Chat from '../../components/chat/chat';
 
 @Component({
   selector: 'app-acceuil',
-  imports: [CommonModule, Nav, Apropos, Competences, Projets, Experiences, Contacts, Footer],
+  imports: [CommonModule, Nav, Apropos, Competences, Projets, Experiences, Contacts, Footer, Chat],
   templateUrl: './acceuil.html',
   styleUrl: './acceuil.css',
 })

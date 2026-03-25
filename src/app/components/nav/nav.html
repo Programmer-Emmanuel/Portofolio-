@@ -56,6 +56,17 @@
                             Expérience
                         </span>
                     </a>
+
+                    <!-- Chat avec # au survol sans déplacement -->
+                    <a routerLink="/" 
+                        fragment="chat"
+                       routerLinkActive="text-orange-400"
+                       class="group text-white px-3 py-2 text-sm font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                        <span class="relative inline-block">
+                            <span class="invisible group-hover:visible absolute -left-3 top-0">#</span>
+                            ChatBot
+                        </span>
+                    </a>
                     
                     <!-- Contacts avec # au survol sans déplacement -->
                     <a routerLink="/" 
@@ -135,6 +146,18 @@
                 <span class="relative inline-block">
                     <span class="invisible group-hover:visible absolute -left-4 top-0">#</span>
                     <span class="text-white">Expérience</span>
+                    
+                </span>
+            </a>
+
+            <a routerLink="/" 
+                fragment="chat"
+               routerLinkActive="text-orange-400"
+               (click)="closeMobileMenu()"
+               class="group block py-3 px-4 text-base font-medium transition-all duration-300 ease-in-out hover:text-orange-400 relative overflow-hidden">
+                <span class="relative inline-block">
+                    <span class="invisible group-hover:visible absolute -left-4 top-0">#</span>
+                    <span class="text-white">ChatBot</span>
                     
                 </span>
             </a>
