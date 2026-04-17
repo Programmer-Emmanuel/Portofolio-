@@ -13,6 +13,11 @@ export class Experiences implements OnInit {
 
   experiences = [
     {
+      titre: 'BootCamp à ProActive Swiss et Growing Consulting',
+      description: '2eme place à l’académie des jeunes developpeurs Fullstack',
+      annee: '2026'
+    },
+    {
       titre: 'Stage à NEURA COMPUTING',
       description: 'Développeur fullstack',
       annee: '2025'
