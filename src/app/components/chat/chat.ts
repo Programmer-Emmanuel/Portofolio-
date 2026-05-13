@@ -1,5 +1,5 @@
 // chat.component.ts
-import { Component, OnInit, OnDestroy, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Nav } from '../../components/nav/nav';
@@ -22,6 +22,8 @@ interface Obstacle {
 })
 export default class Chat implements OnInit, OnDestroy {
   
+  @ViewChild('gameCanvas') gameCanvas!: ElementRef;
+  
   score: number = 0;
   highScore: number = 0;
   level: number = 1;
@@ -31,6 +33,7 @@ export default class Chat implements OnInit, OnDestroy {
   playerPosition: number = 50; // Position X du joueur en pourcentage (0-100)
   obstacles: Obstacle[] = [];
   explosion: { x: number, y: number } | null = null;
+  isTouching: boolean = false;
   
   private gameLoop: any;
   private obstacleSpawnInterval: any;
@@ -40,11 +43,16 @@ export default class Chat implements OnInit, OnDestroy {
   private readonly PLAYER_WIDTH = 48;
   private readonly PLAYER_HEIGHT = 48;
   private readonly PLAYER_BOTTOM_OFFSET = 30;
-  private readonly CANVAS_HEIGHT = 450; // Réduit de 500 à 450
+  private readonly CANVAS_HEIGHT = 450;
+  private readonly CANVAS_WIDTH = 500;
   
   private baseObstacleSpeed: number = 3;
   private currentObstacleSpeed: number = 3;
-  private spawnRate: number = 2000; // milliseconds
+  private spawnRate: number = 2000;
+  
+  // Variables pour le contrôle tactile
+  private isDragging: boolean = false;
+  private touchStartX: number = 0;
   
   constructor(private cdr: ChangeDetectorRef) {}
   
@@ -91,16 +99,77 @@ export default class Chat implements OnInit, OnDestroy {
     }
   }
   
+  // Contrôle tactile - Touch events
+  onTouchStart(event: TouchEvent) {
+    if (!this.gameActive) return;
+    event.preventDefault();
+    this.isDragging = true;
+    this.isTouching = true;
+    this.touchStartX = event.touches[0].clientX;
+    
+    // Cacher l'indicateur après 2 secondes
+    setTimeout(() => {
+      this.isTouching = false;
+      this.cdr.detectChanges();
+    }, 2000);
+  }
+  
+  onTouchMove(event: TouchEvent) {
+    if (!this.gameActive || !this.isDragging) return;
+    event.preventDefault();
+    
+    const touchX = event.touches[0].clientX;
+    const canvasRect = this.gameCanvas.nativeElement.getBoundingClientRect();
+    const relativeX = touchX - canvasRect.left;
+    const percentage = (relativeX / canvasRect.width) * 100;
+    
+    // Limiter entre 5% et 95%
+    let newPosition = Math.min(95, Math.max(5, percentage));
+    this.playerPosition = newPosition;
+    this.cdr.detectChanges();
+  }
+  
+  onTouchEnd() {
+    this.isDragging = false;
+  }
+  
+  // Contrôle tactile - Mouse events (pour le debugging sur desktop)
+  onMouseDown(event: MouseEvent) {
+    if (!this.gameActive) return;
+    event.preventDefault();
+    this.isDragging = true;
+    this.updateCarPositionFromMouse(event);
+  }
+  
+  onMouseMove(event: MouseEvent) {
+    if (!this.gameActive || !this.isDragging) return;
+    event.preventDefault();
+    this.updateCarPositionFromMouse(event);
+  }
+  
+  onMouseUp() {
+    this.isDragging = false;
+  }
+  
+  private updateCarPositionFromMouse(event: MouseEvent) {
+    const canvasRect = this.gameCanvas.nativeElement.getBoundingClientRect();
+    const mouseX = event.clientX - canvasRect.left;
+    const percentage = (mouseX / canvasRect.width) * 100;
+    
+    // Limiter entre 5% et 95%
+    let newPosition = Math.min(95, Math.max(5, percentage));
+    this.playerPosition = newPosition;
+    this.cdr.detectChanges();
+  }
+  
   moveLeft() {
     if (!this.gameActive) return;
-    // Déplacer de 8% à gauche, minimum 5%
     this.playerPosition = Math.max(5, this.playerPosition - 8);
     this.cdr.detectChanges();
   }
   
   moveRight() {
     if (!this.gameActive) return;
-    // Déplacer de 8% à droite, maximum 95%
     this.playerPosition = Math.min(95, this.playerPosition + 8);
     this.cdr.detectChanges();
   }
@@ -111,18 +180,15 @@ export default class Chat implements OnInit, OnDestroy {
     this.gameActive = true;
     this.gameStarted = true;
     
-    // Forcer la détection des changements
     this.cdr.detectChanges();
     
-    // Démarrer la boucle de jeu
     this.gameLoop = setInterval(() => {
       if (this.gameActive) {
         this.updateGame();
         this.cdr.detectChanges();
       }
-    }, 16); // ~60 FPS
+    }, 16);
     
-    // Générer des obstacles périodiquement
     this.obstacleSpawnInterval = setInterval(() => {
       if (this.gameActive) {
         this.spawnObstacle();
@@ -130,7 +196,6 @@ export default class Chat implements OnInit, OnDestroy {
       }
     }, this.spawnRate);
     
-    // Mettre à jour le score périodiquement
     this.scoreInterval = setInterval(() => {
       if (this.gameActive) {
         this.updateScore();
@@ -138,13 +203,12 @@ export default class Chat implements OnInit, OnDestroy {
       }
     }, 1000);
     
-    // Gérer la difficulté progressive
     this.difficultyInterval = setInterval(() => {
       if (this.gameActive) {
         this.increaseDifficulty();
         this.cdr.detectChanges();
       }
-    }, 15000); // Toutes les 15 secondes
+    }, 15000);
   }
   
   resetGameState() {
@@ -180,7 +244,6 @@ export default class Chat implements OnInit, OnDestroy {
     this.gameActive = false;
     this.cdr.detectChanges();
     
-    // Redémarrer automatiquement après reset
     setTimeout(() => {
       this.startGame();
     }, 100);
@@ -191,7 +254,6 @@ export default class Chat implements OnInit, OnDestroy {
     
     const obstacleWidth = 40;
     const obstacleHeight = 40;
-    // Position X en pourcentage (5% à 95%)
     const minX = 5;
     const maxX = 95;
     
@@ -208,19 +270,16 @@ export default class Chat implements OnInit, OnDestroy {
   }
   
   updateGame() {
-    // Mettre à jour les positions des obstacles
     for (let i = 0; i < this.obstacles.length; i++) {
       const obstacle = this.obstacles[i];
       obstacle.y += obstacle.speed;
       
-      // Supprimer les obstacles qui sont sortis de l'écran
       if (obstacle.y > this.CANVAS_HEIGHT) {
         this.obstacles.splice(i, 1);
         i--;
         continue;
       }
       
-      // Vérifier la collision avec le joueur
       if (this.checkCollision(obstacle)) {
         this.endGame();
         return;
@@ -230,39 +289,30 @@ export default class Chat implements OnInit, OnDestroy {
   }
   
   checkCollision(obstacle: Obstacle): boolean {
-    // Convertir la position du joueur de pourcentage à pixels
-    const containerWidth = 500; // Largeur du canvas en pixels
-    const playerXInPixels = (this.playerPosition / 100) * containerWidth;
+    const playerXInPixels = (this.playerPosition / 100) * this.CANVAS_WIDTH;
     
-    // Position du joueur en pixels
     const playerLeft = playerXInPixels - this.PLAYER_WIDTH / 2;
     const playerRight = playerXInPixels + this.PLAYER_WIDTH / 2;
     const playerTop = this.CANVAS_HEIGHT - this.PLAYER_HEIGHT - this.PLAYER_BOTTOM_OFFSET;
     const playerBottom = this.CANVAS_HEIGHT - this.PLAYER_BOTTOM_OFFSET;
     
-    // Position de l'obstacle (convertir X de pourcentage à pixels)
-    const obstacleXInPixels = (obstacle.x / 100) * containerWidth;
+    const obstacleXInPixels = (obstacle.x / 100) * this.CANVAS_WIDTH;
     const obstacleLeft = obstacleXInPixels - obstacle.width / 2;
     const obstacleRight = obstacleXInPixels + obstacle.width / 2;
     const obstacleTop = obstacle.y;
     const obstacleBottom = obstacle.y + obstacle.height;
     
-    // Vérifier l'intersection
-    const collision = (playerLeft < obstacleRight &&
-                       playerRight > obstacleLeft &&
-                       playerTop < obstacleBottom &&
-                       playerBottom > obstacleTop);
-    
-    return collision;
+    return (playerLeft < obstacleRight &&
+            playerRight > obstacleLeft &&
+            playerTop < obstacleBottom &&
+            playerBottom > obstacleTop);
   }
   
   updateScore() {
     if (!this.gameActive) return;
     
-    // Le score augmente en fonction du temps de survie
     this.score++;
     
-    // Mettre à jour le high score
     if (this.score > this.highScore) {
       this.highScore = this.score;
       localStorage.setItem('trafficDodgerHighScore', this.highScore.toString());
@@ -274,17 +324,12 @@ export default class Chat implements OnInit, OnDestroy {
   increaseDifficulty() {
     if (!this.gameActive) return;
     
-    // Augmenter le niveau
     this.level++;
-    
-    // Augmenter la vitesse des obstacles
     this.currentObstacleSpeed = Math.min(this.baseObstacleSpeed + (this.level - 1) * 0.5, 12);
     
-    // Augmenter le taux d'apparition (plus fréquent)
     if (this.spawnRate > 500) {
       this.spawnRate = Math.max(500, this.spawnRate - 150);
       
-      // Recréer l'intervalle avec le nouveau taux
       if (this.obstacleSpawnInterval) {
         clearInterval(this.obstacleSpawnInterval);
         this.obstacleSpawnInterval = setInterval(() => {
@@ -296,7 +341,6 @@ export default class Chat implements OnInit, OnDestroy {
       }
     }
     
-    // Mettre à jour la vitesse des obstacles existants
     for (let obstacle of this.obstacles) {
       obstacle.speed = this.currentObstacleSpeed;
     }
@@ -307,7 +351,6 @@ export default class Chat implements OnInit, OnDestroy {
   endGame() {
     this.gameActive = false;
     
-    // Afficher l'explosion à la position du joueur
     this.explosion = {
       x: this.playerPosition,
       y: this.CANVAS_HEIGHT - this.PLAYER_HEIGHT - this.PLAYER_BOTTOM_OFFSET + this.PLAYER_HEIGHT / 2
@@ -315,7 +358,6 @@ export default class Chat implements OnInit, OnDestroy {
     
     this.cdr.detectChanges();
     
-    // Cacher l'explosion après l'animation
     setTimeout(() => {
       this.explosion = null;
       this.cdr.detectChanges();

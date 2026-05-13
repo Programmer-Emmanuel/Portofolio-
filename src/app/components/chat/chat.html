@@ -63,7 +63,7 @@
                         </div>
                         <div>
                             <h3 class="text-white font-semibold">Traffic Dodger</h3>
-                            <p class="text-xs text-gray-400">Utilisez ← → ou les boutons tactiles</p>
+                            <p class="text-xs text-gray-400">Glissez votre doigt ou utilisez les boutons</p>
                         </div>
                     </div>
                     <button (click)="resetGame()" class="text-gray-400 hover:text-orange-400 transition-colors p-2">
@@ -91,8 +91,15 @@
                 
                 <!-- Game Canvas -->
                 <div class="p-6">
-                    <div class="relative bg-gradient-to-b from-gray-900 to-gray-800 rounded-xl border border-gray-700 overflow-hidden"
-                         style="height: 450px; min-height: 450px;">
+                    <div #gameCanvas
+                         class="relative bg-gradient-to-b from-gray-900 to-gray-800 rounded-xl border border-gray-700 overflow-hidden touch-none"
+                         style="height: 450px; min-height: 450px;"
+                         (touchstart)="onTouchStart($event)"
+                         (touchmove)="onTouchMove($event)"
+                         (touchend)="onTouchEnd()"
+                         (mousedown)="onMouseDown($event)"
+                         (mousemove)="onMouseMove($event)"
+                         (mouseup)="onMouseUp()">
                         
                         <!-- Road Lines -->
                         <div class="absolute inset-0 pointer-events-none">
@@ -143,6 +150,12 @@
                             </div>
                         </div>
                         
+                        <!-- Touch Indicator -->
+                        <div *ngIf="isTouching" 
+                             class="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-orange-500/50 text-white px-3 py-1 rounded-full text-xs z-30">
+                            👆 Glissez pour conduire
+                        </div>
+                        
                         <!-- Explosion Effect -->
                         <div *ngIf="explosion" class="absolute z-30"
                              [style.left.%]="explosion.x"
@@ -180,7 +193,7 @@
                     </div>
 
                     <!-- Mobile Controls -->
-                    <div class="mt-4 flex justify-center gap-4 md:hidden">
+                    <div class="mt-4 flex justify-center gap-4">
                         <button (click)="moveLeft()" 
                                 class="px-6 py-3 bg-gray-700 hover:bg-orange-500 text-white rounded-lg font-medium transition-all duration-300">
                             ← GAUCHE
@@ -191,31 +204,6 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- Game Instructions -->
-                <!-- <div class="px-6 py-4 border-t border-gray-700 bg-gray-800/30">
-                    <p class="text-xs text-gray-400 mb-2">📖 Comment jouer :</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-400">
-                        <div class="flex items-center gap-2">
-                            <span>🎮 Touches ← → pour déplacer la voiture</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span>📱 Boutons tactiles sur mobile</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span>⚡ La difficulté augmente toutes les 15 secondes</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span>🏆 Survivez le plus longtemps possible !</span>
-                        </div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-center gap-2">
-                        <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-                        <span class="text-xs text-gray-500">Votre voiture (bleue)</span>
-                        <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse ml-3"></div>
-                        <span class="text-xs text-gray-500">Obstacles (rouges)</span>
-                    </div>
-                </div> -->
             </div>
         </div>
     </div>
@@ -281,5 +269,9 @@
 
 .animate-explosion {
     animation: explosion 0.3s ease-out forwards;
+}
+
+.touch-none {
+    touch-action: none;
 }
 </style>
