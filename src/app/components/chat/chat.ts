@@ -1,15 +1,16 @@
 // chat.component.ts
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Nav } from '../../components/nav/nav';
 import * as AOS from 'aos';
 
-interface Message {
-  id: number;
-  text: string;
-  isUser: boolean;
-  timestamp: Date;
+interface Obstacle {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  speed: number;
 }
 
 @Component({
@@ -19,68 +20,33 @@ interface Message {
   templateUrl: './chat.html',
   styleUrls: ['./chat.css']
 })
-export default class Chat implements OnInit, AfterViewChecked {
+export default class Chat implements OnInit, OnDestroy {
   
-  @ViewChild('chatMessages') private chatMessagesContainer!: ElementRef;
-
-  constructor(private cd: ChangeDetectorRef) {}
-
-  messages: Message[] = [];
-  userInput: string = '';
-  isTyping: boolean = false;
+  score: number = 0;
+  highScore: number = 0;
+  level: number = 1;
+  gameActive: boolean = false;
+  gameStarted: boolean = false;
   
-  // Exemples de questions pour l'utilisateur
-  exampleQuestions: string[] = [
-    "Qui est Emmanuel Bamidélé ?",
-    "Quelles sont ses compétences techniques ?",
-    "Comment contacter Emmanuel ?",
-    "Est-il disponible pour des missions freelance ?",
-    "Quelles sont ses expériences professionnelles ?",
-    "Quels projets a-t-il réalisés ?",
-    "Quelles technologies utilise-t-il ?",
-    "Fait-il du développement mobile ?",
-    "Où est-il basé ?",
-  ];
+  playerPosition: number = 50; // Position X du joueur en pourcentage (0-100)
+  obstacles: Obstacle[] = [];
+  explosion: { x: number, y: number } | null = null;
   
-  // Informations personnelles pour le chatbot
-  private personalInfo = {
-    nom: 'Emmanuel Bamidélé',
-    prenom: 'Emmanuel',
-    titre: 'Développeur Fullstack orienté Backend',
-    ville: 'Abidjan, Côte d\'Ivoire',
-    email: 'marcbamidele@gmail.com',
-    github: 'github.com/Programmer-Emmanuel',
-    linkedin: 'linkedin.com/in/emmanuel-bamidele-b63a49274',
-    telephone: '+225 01 400 226 93',
-    whatsapp: '+225 01 400 226 93',
-    competences: [
-      'Développement Frontend (React.js, Angular, TypeScript, Tailwind CSS)',
-      'Développement Backend (Laravel, PHP, Python)',
-      'Développement Mobile (React Native)',
-      'Conception d\'API REST',
-      'Gestion de bases de données (MySQL, PostgreSQL)',
-      'UI/UX Design',
-      'Optimisation & Performance',
-      'Sécurité des applications'
-    ],
-    experiences: [
-      'Stage à NEURA COMPUTING - Développeur fullstack (2025)',
-      '2ème Place au YADAC ROBOTICS CHALLENGE (2025)',
-    ],
-    projets: [
-      'Application mobile e-commerce complète avec panier, suivi des commandes et interface interactive.',
-      'Application web de recupération des objets perdus développement de la génération dynamique de codes QR personnalisés, associés à chaque objet, avec mise en place du système de signalement après scan.',
-      'Application web international de prise de rendez-vous médicaux.',
-      'Application web/mobile de lutte contre le gaspillage alimentaire, connectant restaurants et clients pour la vente d’invendus à prix réduit.',
-      'Application web simulant le transfert d’argent d’une personne X à une personne Y de manière fluide.',
-      'Application web complète développée avec Laravel qui centralise la gestion des ressources humaines, des employés, des congés, des finances et de la communication interne grâce à un tableau de bord interactif, des workflows automatisés et des fonctionnalités intelligentes basées sur l’IA',
-    ],
-    disponibilite: 'Disponible pour missions freelance et opportunités professionnelles',
-    bio: 'Développeur fullstack orienté backend, passionné par la création d\'architectures robustes et d\'APIs performantes. J\'utilise Laravel, React, Angular et React Native pour créer des applications modernes.'
-  };
+  private gameLoop: any;
+  private obstacleSpawnInterval: any;
+  private difficultyInterval: any;
+  private scoreInterval: any;
   
-  private greetings = ['bonjour', 'salut', 'hello', 'hi', 'coucou', 'hey'];
-  private farewells = ['au revoir', 'bye', 'ciao', 'à plus', 'adieu'];
+  private readonly PLAYER_WIDTH = 48;
+  private readonly PLAYER_HEIGHT = 48;
+  private readonly PLAYER_BOTTOM_OFFSET = 30;
+  private readonly CANVAS_HEIGHT = 450; // Réduit de 500 à 450
+  
+  private baseObstacleSpeed: number = 3;
+  private currentObstacleSpeed: number = 3;
+  private spawnRate: number = 2000; // milliseconds
+  
+  constructor(private cdr: ChangeDetectorRef) {}
   
   ngOnInit() {
     AOS.init({
@@ -90,168 +56,271 @@ export default class Chat implements OnInit, AfterViewChecked {
       easing: 'ease-in-out'
     });
     
-    // Message de bienvenue
+    // Charger le high score depuis localStorage
+    const savedHighScore = localStorage.getItem('trafficDodgerHighScore');
+    if (savedHighScore) {
+      this.highScore = parseInt(savedHighScore);
+    }
+    
+    // Initialiser la position du joueur au centre (50%)
+    this.playerPosition = 50;
+    
+    // Démarrer le jeu automatiquement
     setTimeout(() => {
-      this.addBotMessage('👋 Bonjour ! Je suis l\'assistant d\'Emmanuel. Posez-moi toutes vos questions sur son parcours, ses compétences, ou ses disponibilités !');
-    }, 500);
+      this.startGame();
+    }, 100);
   }
   
-  ngAfterViewChecked() {
-    this.scrollToBottom();
+  ngOnDestroy() {
+    this.stopGame();
   }
   
-  scrollToBottom(): void {
-    try {
-      if (this.chatMessagesContainer) {
-        this.chatMessagesContainer.nativeElement.scrollTop = this.chatMessagesContainer.nativeElement.scrollHeight;
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (!this.gameActive) return;
+    
+    switch(event.key) {
+      case 'ArrowLeft':
+        event.preventDefault();
+        this.moveLeft();
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        this.moveRight();
+        break;
+    }
+  }
+  
+  moveLeft() {
+    if (!this.gameActive) return;
+    // Déplacer de 8% à gauche, minimum 5%
+    this.playerPosition = Math.max(5, this.playerPosition - 8);
+    this.cdr.detectChanges();
+  }
+  
+  moveRight() {
+    if (!this.gameActive) return;
+    // Déplacer de 8% à droite, maximum 95%
+    this.playerPosition = Math.min(95, this.playerPosition + 8);
+    this.cdr.detectChanges();
+  }
+  
+  startGame() {
+    this.stopGame();
+    this.resetGameState();
+    this.gameActive = true;
+    this.gameStarted = true;
+    
+    // Forcer la détection des changements
+    this.cdr.detectChanges();
+    
+    // Démarrer la boucle de jeu
+    this.gameLoop = setInterval(() => {
+      if (this.gameActive) {
+        this.updateGame();
+        this.cdr.detectChanges();
       }
-    } catch(err) { }
+    }, 16); // ~60 FPS
+    
+    // Générer des obstacles périodiquement
+    this.obstacleSpawnInterval = setInterval(() => {
+      if (this.gameActive) {
+        this.spawnObstacle();
+        this.cdr.detectChanges();
+      }
+    }, this.spawnRate);
+    
+    // Mettre à jour le score périodiquement
+    this.scoreInterval = setInterval(() => {
+      if (this.gameActive) {
+        this.updateScore();
+        this.cdr.detectChanges();
+      }
+    }, 1000);
+    
+    // Gérer la difficulté progressive
+    this.difficultyInterval = setInterval(() => {
+      if (this.gameActive) {
+        this.increaseDifficulty();
+        this.cdr.detectChanges();
+      }
+    }, 15000); // Toutes les 15 secondes
   }
   
-  sendMessage() {
-    if (!this.userInput.trim()) return;
+  resetGameState() {
+    this.score = 0;
+    this.level = 1;
+    this.obstacles = [];
+    this.playerPosition = 50;
+    this.baseObstacleSpeed = 3;
+    this.currentObstacleSpeed = 3;
+    this.spawnRate = 2000;
+    this.explosion = null;
+    this.cdr.detectChanges();
+  }
+  
+  stopGame() {
+    if (this.gameLoop) clearInterval(this.gameLoop);
+    if (this.obstacleSpawnInterval) clearInterval(this.obstacleSpawnInterval);
+    if (this.difficultyInterval) clearInterval(this.difficultyInterval);
+    if (this.scoreInterval) clearInterval(this.scoreInterval);
     
-    // Ajouter le message de l'utilisateur
-    const userMessage: Message = {
-      id: Date.now(),
-      text: this.userInput,
-      isUser: true,
-      timestamp: new Date()
-    };
-    this.messages.push(userMessage);
+    this.gameLoop = null;
+    this.obstacleSpawnInterval = null;
+    this.difficultyInterval = null;
+    this.scoreInterval = null;
+  }
+  
+  resetGame() {
+    if (this.gameActive) {
+      this.stopGame();
+    }
+    this.resetGameState();
+    this.gameStarted = false;
+    this.gameActive = false;
+    this.cdr.detectChanges();
     
-    const userQuestion = this.userInput.toLowerCase();
-    this.userInput = '';
-    
-    // Simuler la frappe du bot
-    this.isTyping = true;
-    
+    // Redémarrer automatiquement après reset
     setTimeout(() => {
-      const botResponse = this.generateResponse(userQuestion);
-      this.addBotMessage(botResponse);
-      this.isTyping = false;
-      // Forcer Angular à mettre à jour l'affichage
-      this.cd.detectChanges();
-      this.scrollToBottom();        
-    }, 500 + Math.random() * 500);
+      this.startGame();
+    }, 100);
   }
   
-  addBotMessage(text: string) {
-    const botMessage: Message = {
-      id: Date.now(),
-      text: text,
-      isUser: false,
-      timestamp: new Date()
+  spawnObstacle() {
+    if (!this.gameActive) return;
+    
+    const obstacleWidth = 40;
+    const obstacleHeight = 40;
+    // Position X en pourcentage (5% à 95%)
+    const minX = 5;
+    const maxX = 95;
+    
+    const obstacle: Obstacle = {
+      x: Math.random() * (maxX - minX) + minX,
+      y: -obstacleHeight,
+      width: obstacleWidth,
+      height: obstacleHeight,
+      speed: this.currentObstacleSpeed
     };
-    this.messages.push(botMessage);
+    
+    this.obstacles.push(obstacle);
+    this.cdr.detectChanges();
   }
   
-  generateResponse(question: string): string {
-    
-    // Salutations
-    if (this.greetings.some(greeting => question.includes(greeting))) {
-      return 'Bonjour ! 😊 Je suis l\'assistant d\'Emmanuel. Que voulez-vous savoir sur lui ? Ses compétences, son parcours, ou comment le contacter ?';
+  updateGame() {
+    // Mettre à jour les positions des obstacles
+    for (let i = 0; i < this.obstacles.length; i++) {
+      const obstacle = this.obstacles[i];
+      obstacle.y += obstacle.speed;
+      
+      // Supprimer les obstacles qui sont sortis de l'écran
+      if (obstacle.y > this.CANVAS_HEIGHT) {
+        this.obstacles.splice(i, 1);
+        i--;
+        continue;
+      }
+      
+      // Vérifier la collision avec le joueur
+      if (this.checkCollision(obstacle)) {
+        this.endGame();
+        return;
+      }
     }
-    
-    // Au revoir
-    if (this.farewells.some(farewell => question.includes(farewell))) {
-      return 'Au revoir ! N\'hésitez pas à revenir si vous avez d\'autres questions sur Emmanuel. Passez une excellente journée ! 👋';
-    }
-    
-    // Qui es-tu / présentation
-    if (question.includes('qui es-tu') || question.includes('présente-toi') || question.includes('ton nom')) {
-      return `🤖 Je suis l'assistant virtuel d'${this.personalInfo.nom}. Je suis là pour répondre à toutes vos questions sur son parcours, ses compétences, ses projets et comment le contacter !`;
-    }
-
-  if (question.includes('emmanuel') || question.includes('bamidélé') || question.includes('bamidele')) {
-    return `👤 ${this.personalInfo.nom} est un développeur Fullstack orienté backend. 
-  Il maîtrise Laravel, PHP, MySQL/PostgreSQL, React.js, Angular, Tailwind CSS et React Native pour le développement mobile. 
-  💻 Ses compétences incluent le développement Frontend, Backend, Mobile, la conception d'API, la gestion de bases de données, et l'optimisation des applications. 
-  📍 Il est basé à ${this.personalInfo.ville} et est disponible pour des missions freelance ou des collaborations. 
-  📱 Vous pouvez le contacter par email, téléphone ou WhatsApp pour toute demande professionnelle.`;
-  }
-    
-    // Nom / identité
-    if (question.includes('nom') || question.includes('appelle')) {
-      return `👤 Il s'appelle ${this.personalInfo.nom}. Vous pouvez l'appeler Emmanuel.`;
-    }
-    
-    // Compétences
-    if (question.includes('compétence') || question.includes('compétences') || question.includes('sais faire') || question.includes('techno') || question.includes('langage') || question.includes('technologies')) {
-      const competencesList = this.personalInfo.competences.map(c => `• ${c}`).join('\n');
-      return `💻 ${this.personalInfo.nom} maîtrise plusieurs technologies :\n\n${competencesList}\n\nC'est un développeur fullstack polyvalent !`;
-    }
-    
-    // Expériences
-    if (question.includes('expérience') || question.includes('expériences') || question.includes('parcours') || question.includes('stage') || question.includes('travail') || question.includes('carrière')) {
-      const experiencesList = this.personalInfo.experiences.map(e => `• ${e}`).join('\n');
-      return `📋 Voici son parcours :\n\n${experiencesList}`;
-    }
-    
-    // Projets
-    if (question.includes('projet') || question.includes('projets') || question.includes('réalisation') || question.includes('création') || question.includes('portfolio')) {
-      const projetsList = this.personalInfo.projets.map(p => `• ${p}`).join('\n');
-      return `🚀 ${this.personalInfo.nom} a réalisé plusieurs projets notables :\n\n${projetsList}\n\nVous pouvez retrouver tous ses projets sur la page Projets de son portfolio !`;
-    }
-    
-    // Disponibilité
-    if (question.includes('disponible') || question.includes('disponibilité') || question.includes('freelance') || question.includes('mission') || question.includes('embauche') || question.includes('recrute')) {
-      return `✅ ${this.personalInfo.disponibilite}. N'hésitez pas à le contacter via ses réseaux ou par email pour discuter de vos projets !`;
-    }
-    
-    // Contact
-    if (question.includes('contact') || question.includes('mail') || question.includes('email') || question.includes('téléphone') || question.includes('whatsapp') || question.includes('joindre') || question.includes('réseaux')) {
-      return `📱 Voici comment contacter ${this.personalInfo.nom} :\n\n📧 Email : ${this.personalInfo.email}\n📱 Téléphone/WhatsApp : ${this.personalInfo.telephone}\n💻 GitHub : ${this.personalInfo.github}\n🔗 LinkedIn : ${this.personalInfo.linkedin}`;
-    }
-    
-    // Backend / Laravel / API
-    if (question.includes('backend') || question.includes('laravel') || question.includes('api') || question.includes('serveur')) {
-      return `⚙️ ${this.personalInfo.nom} est un développeur fullstack orienté backend. Il excelle particulièrement avec Laravel pour la création d'APIs robustes et d'architectures scalables. Il maîtrise également PHP, MySQL et PostgreSQL.`;
-    }
-    
-    // Frontend / React / Angular
-    if (question.includes('frontend') || question.includes('react') || question.includes('angular') || question.includes('tailwind') || question.includes('css')) {
-      return `🎨 Côté frontend, ${this.personalInfo.nom} utilise React.js et Angular pour créer des interfaces modernes, avec Tailwind CSS pour un design responsive et élégant.`;
-    }
-    
-    // Mobile / React Native
-    if (question.includes('mobile') || question.includes('react native') || question.includes('android') || question.includes('ios')) {
-      return `📱 Pour le développement mobile, ${this.personalInfo.nom} utilise React Native pour créer des applications cross-platform performantes pour iOS et Android.`;
-    }
-    
-    // Formation / études
-    if (question.includes('formation') || question.includes('étude') || question.includes('diplôme') || question.includes('école') || question.includes('certification')) {
-      return `🎓 ${this.personalInfo.nom} a suivi une formation intensive en développement fullstack et continue d'apprendre en permanence pour rester à jour avec les dernières technologies. Il est passionné par l'apprentissage continu.`;
-    }
-    
-    // Ville / localisation
-    if (question.includes('ville') || question.includes('où') || question.includes('localisation') || question.includes('habite') || question.includes('pays')) {
-      return `📍 ${this.personalInfo.nom} est basé à ${this.personalInfo.ville}. Il travaille à distance et est ouvert aux collaborations partout dans le monde ! 🌍`;
-    }
-    
-    // Réponse par défaut pour les questions hors sujet
-    if (!question.includes('emmanuel') && !question.includes('bamidélé')) {
-      return `🤔 Désolé, je ne peux répondre qu'aux questions concernant ${this.personalInfo.nom}. Voici ce que je peux vous dire sur lui :\n\n• Ses compétences techniques\n• Son parcours et expériences\n• Ses projets réalisés\n• Ses disponibilités\n• Ses coordonnées\n\nQue souhaitez-vous savoir exactement ?`;
-    }
-    
-    // Réponse par défaut
-    return `🤔 Je n'ai pas bien compris votre question. Voici ce que je peux vous dire sur ${this.personalInfo.nom} :\n\n• Ses compétences techniques\n• Son parcours et expériences\n• Ses projets réalisés\n• Ses disponibilités\n• Ses coordonnées\n\nQue souhaitez-vous savoir exactement ?`;
+    this.cdr.detectChanges();
   }
   
-  clearChat() {
-    this.messages = [];
-    this.addBotMessage('🧹 Chat réinitialisé ! Posez-moi vos questions sur Emmanuel.');
+  checkCollision(obstacle: Obstacle): boolean {
+    // Convertir la position du joueur de pourcentage à pixels
+    const containerWidth = 500; // Largeur du canvas en pixels
+    const playerXInPixels = (this.playerPosition / 100) * containerWidth;
+    
+    // Position du joueur en pixels
+    const playerLeft = playerXInPixels - this.PLAYER_WIDTH / 2;
+    const playerRight = playerXInPixels + this.PLAYER_WIDTH / 2;
+    const playerTop = this.CANVAS_HEIGHT - this.PLAYER_HEIGHT - this.PLAYER_BOTTOM_OFFSET;
+    const playerBottom = this.CANVAS_HEIGHT - this.PLAYER_BOTTOM_OFFSET;
+    
+    // Position de l'obstacle (convertir X de pourcentage à pixels)
+    const obstacleXInPixels = (obstacle.x / 100) * containerWidth;
+    const obstacleLeft = obstacleXInPixels - obstacle.width / 2;
+    const obstacleRight = obstacleXInPixels + obstacle.width / 2;
+    const obstacleTop = obstacle.y;
+    const obstacleBottom = obstacle.y + obstacle.height;
+    
+    // Vérifier l'intersection
+    const collision = (playerLeft < obstacleRight &&
+                       playerRight > obstacleLeft &&
+                       playerTop < obstacleBottom &&
+                       playerBottom > obstacleTop);
+    
+    return collision;
   }
   
-  useExampleQuestion(question: string) {
-    this.userInput = question;
-    this.sendMessage();
-  }
-  
-  handleKeyPress(event: KeyboardEvent) {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      this.sendMessage();
+  updateScore() {
+    if (!this.gameActive) return;
+    
+    // Le score augmente en fonction du temps de survie
+    this.score++;
+    
+    // Mettre à jour le high score
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      localStorage.setItem('trafficDodgerHighScore', this.highScore.toString());
     }
+    
+    this.cdr.detectChanges();
+  }
+  
+  increaseDifficulty() {
+    if (!this.gameActive) return;
+    
+    // Augmenter le niveau
+    this.level++;
+    
+    // Augmenter la vitesse des obstacles
+    this.currentObstacleSpeed = Math.min(this.baseObstacleSpeed + (this.level - 1) * 0.5, 12);
+    
+    // Augmenter le taux d'apparition (plus fréquent)
+    if (this.spawnRate > 500) {
+      this.spawnRate = Math.max(500, this.spawnRate - 150);
+      
+      // Recréer l'intervalle avec le nouveau taux
+      if (this.obstacleSpawnInterval) {
+        clearInterval(this.obstacleSpawnInterval);
+        this.obstacleSpawnInterval = setInterval(() => {
+          if (this.gameActive) {
+            this.spawnObstacle();
+            this.cdr.detectChanges();
+          }
+        }, this.spawnRate);
+      }
+    }
+    
+    // Mettre à jour la vitesse des obstacles existants
+    for (let obstacle of this.obstacles) {
+      obstacle.speed = this.currentObstacleSpeed;
+    }
+    
+    this.cdr.detectChanges();
+  }
+  
+  endGame() {
+    this.gameActive = false;
+    
+    // Afficher l'explosion à la position du joueur
+    this.explosion = {
+      x: this.playerPosition,
+      y: this.CANVAS_HEIGHT - this.PLAYER_HEIGHT - this.PLAYER_BOTTOM_OFFSET + this.PLAYER_HEIGHT / 2
+    };
+    
+    this.cdr.detectChanges();
+    
+    // Cacher l'explosion après l'animation
+    setTimeout(() => {
+      this.explosion = null;
+      this.cdr.detectChanges();
+    }, 300);
+    
+    this.stopGame();
   }
 }

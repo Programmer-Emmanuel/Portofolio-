@@ -58,5 +58,6 @@ export const image = {
         image15: 'images/emManager/img15.png',
         image16: 'images/emManager/img16.png',
         image17: 'images/emManager/img17.png',
-    }
+    },
+    image_profil : "images/image_profil_section.jpeg"
 };

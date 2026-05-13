@@ -34,131 +34,252 @@
         </div>
     </div>
 
-    <!-- Main Content - ChatBot -->
+    <!-- Main Content - Avoid Obstacles Game -->
     <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
         
         <!-- Titre de section -->
         <div class="text-center mb-8" data-aos="fade-down" data-aos-duration="800">
             <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                <span class="text-white">Chat</span>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-blue-400">
-                    Bot
-                </span>
+                <span class="text-white">Distraction : Traffic Dodger</span>
             </h2>
             <p class="text-gray-400 text-lg max-w-2xl mx-auto">
-                Posez-moi toutes vos questions sur mon parcours, mes compétences et mes disponibilités
+                Évitez les voitures et survivez le plus longtemps possible !
             </p>
             <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-blue-500 mx-auto rounded-full mt-4"></div>
         </div>
         
-        <!-- Chat Container -->
+        <!-- Game Container -->
         <div class="max-w-4xl mx-auto" data-aos="fade-up" data-aos-duration="800">
             <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 overflow-hidden">
                 
-                <!-- Chat Header -->
+                <!-- Game Header -->
                 <div class="flex items-center justify-between p-4 border-b border-gray-700 bg-gray-900/50">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-white font-semibold">Assistant Emmanuel</h3>
-                            <p class="text-xs text-gray-400">En ligne • Répond aux questions sur moi</p>
+                            <h3 class="text-white font-semibold">Traffic Dodger</h3>
+                            <p class="text-xs text-gray-400">Utilisez ← → ou les boutons tactiles</p>
                         </div>
                     </div>
-                    <button (click)="clearChat()" class="text-gray-400 hover:text-orange-400 transition-colors p-2">
+                    <button (click)="resetGame()" class="text-gray-400 hover:text-orange-400 transition-colors p-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                         </svg>
                     </button>
                 </div>
+
+                <!-- Score Board -->
+                <div class="grid grid-cols-3 gap-4 p-4 border-b border-gray-700 bg-gray-800/30">
+                    <div class="text-center">
+                        <p class="text-gray-400 text-xs mb-1">SCORE</p>
+                        <p class="text-3xl font-bold text-orange-500">{{ score }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-gray-400 text-xs mb-1">HIGH SCORE</p>
+                        <p class="text-3xl font-bold text-blue-500">{{ highScore }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-gray-400 text-xs mb-1">LEVEL</p>
+                        <p class="text-3xl font-bold text-green-500">{{ level }}</p>
+                    </div>
+                </div>
                 
-                <!-- Chat Messages -->
-                <!-- Chat Messages -->
-<div #chatMessages 
-     class="max-h-[400px] md:max-h-[450px] lg:max-h-[500px] overflow-y-auto p-4 space-y-4">
-    
-    <div *ngFor="let message of messages" 
-         class="flex"
-         [class.justify-end]="message.isUser"
-         [class.justify-start]="!message.isUser">
-        
-        <!-- Message Bot -->
-        <div *ngIf="!message.isUser" class="flex items-start gap-3 max-w-[85%]">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-                </svg>
-            </div>
-            <div class="bg-gray-700/50 rounded-2xl rounded-tl-none px-4 py-3">
-                <p class="text-gray-200 text-sm whitespace-pre-line">{{ message.text }}</p>
-                <p class="text-xs text-gray-500 mt-1">{{ message.timestamp | date:'HH:mm' }}</p>
-            </div>
-        </div>
-        
-        <!-- Message User -->
-        <div *ngIf="message.isUser" class="flex items-start gap-3 max-w-[85%] flex-row-reverse">
-            <div class="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                </svg>
-            </div>
-            <div class="bg-orange-500/20 rounded-2xl rounded-tr-none px-4 py-3">
-                <p class="text-gray-200 text-sm">{{ message.text }}</p>
-                <p class="text-xs text-gray-500 mt-1">{{ message.timestamp | date:'HH:mm' }}</p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Typing Indicator -->
-    <div *ngIf="isTyping" class="flex items-start gap-3">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center flex-shrink-0">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-            </svg>
-        </div>
-        <div class="bg-gray-700/50 rounded-2xl rounded-tl-none px-4 py-3">
-            <div class="flex gap-1">
-                <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
-                <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></span>
-                <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300"></span>
+                <!-- Game Canvas -->
+                <div class="p-6">
+                    <div class="relative bg-gradient-to-b from-gray-900 to-gray-800 rounded-xl border border-gray-700 overflow-hidden"
+                         style="height: 450px; min-height: 450px;">
+                        
+                        <!-- Road Lines -->
+                        <div class="absolute inset-0 pointer-events-none">
+                            <div class="absolute left-1/4 top-0 bottom-0 w-0.5 bg-yellow-500/30"></div>
+                            <div class="absolute left-2/4 top-0 bottom-0 w-0.5 bg-yellow-500/30"></div>
+                            <div class="absolute left-3/4 top-0 bottom-0 w-0.5 bg-yellow-500/30"></div>
+                            <div class="absolute left-1/2 top-0 w-4 h-8 bg-white/20 rounded-full animate-road-move" style="transform: translateX(-50%);"></div>
+                            <div class="absolute left-1/2 top-16 w-4 h-8 bg-white/20 rounded-full animate-road-move" style="transform: translateX(-50%); animation-delay: 0.5s;"></div>
+                            <div class="absolute left-1/2 top-32 w-4 h-8 bg-white/20 rounded-full animate-road-move" style="transform: translateX(-50%); animation-delay: 1s;"></div>
+                            <div class="absolute left-1/2 top-48 w-4 h-8 bg-white/20 rounded-full animate-road-move" style="transform: translateX(-50%); animation-delay: 1.5s;"></div>
+                        </div>
+                        
+                        <!-- Player Car -->
+                        <div class="absolute transition-all duration-100 z-20"
+                             [style.left.%]="playerPosition"
+                             [style.bottom.px]="30"
+                             style="transform: translateX(-50%);">
+                            <div class="relative">
+                                <!-- Car Body -->
+                                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg border-2 border-blue-400">
+                                    <!-- Car Windows -->
+                                    <div class="absolute top-1 left-1 right-1 h-4 bg-blue-300 rounded-t-lg opacity-75"></div>
+                                    <!-- Car Lights -->
+                                    <div class="absolute top-1 left-0 w-2 h-2 bg-yellow-400 rounded-full"></div>
+                                    <div class="absolute top-1 right-0 w-2 h-2 bg-yellow-400 rounded-full"></div>
+                                    <!-- Neon Glow -->
+                                    <div class="absolute -inset-1 bg-blue-500/20 blur-md rounded-lg -z-10"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Obstacles (Enemy Cars) -->
+                        <div *ngFor="let obstacle of obstacles; let i = index" class="absolute z-10"
+                             [style.left.%]="obstacle.x"
+                             [style.top.px]="obstacle.y"
+                             style="transform: translateX(-50%);">
+                            <div class="relative">
+                                <!-- Enemy Car Body -->
+                                <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg shadow-lg border-2 border-red-400">
+                                    <!-- Enemy Windows -->
+                                    <div class="absolute top-1 left-1 right-1 h-3 bg-red-300 rounded-t-lg opacity-75"></div>
+                                    <!-- Enemy Lights -->
+                                    <div class="absolute top-1 left-0 w-1.5 h-1.5 bg-white rounded-full"></div>
+                                    <div class="absolute top-1 right-0 w-1.5 h-1.5 bg-white rounded-full"></div>
+                                    <!-- Neon Glow -->
+                                    <div class="absolute -inset-1 bg-red-500/20 blur-md rounded-lg -z-10"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Explosion Effect -->
+                        <div *ngIf="explosion" class="absolute z-30"
+                             [style.left.%]="explosion.x"
+                             [style.top.px]="explosion.y"
+                             style="transform: translate(-50%, -50%);">
+                            <div class="text-4xl animate-explosion">💥</div>
+                        </div>
+                        
+                        <!-- Game Status Overlay -->
+                        <div *ngIf="!gameActive && gameStarted" 
+                             class="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-40">
+                            <div class="text-center p-6">
+                                <div class="text-6xl mb-4">💥</div>
+                                <h3 class="text-2xl font-bold text-red-500 mb-2">GAME OVER!</h3>
+                                <p class="text-gray-300 mb-4">Score: {{ score }} | Level: {{ level }}</p>
+                                <button (click)="startGame()" 
+                                        class="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-300">
+                                    RECOMMENCER
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div *ngIf="!gameStarted" 
+                             class="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-40">
+                            <div class="text-center p-6">
+                                <div class="text-6xl mb-4">🚗</div>
+                                <h3 class="text-2xl font-bold text-white mb-2">Traffic Dodger</h3>
+                                <p class="text-gray-300 mb-4">Évitez les voitures rouges le plus longtemps possible !</p>
+                                <button (click)="startGame()" 
+                                        class="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-300">
+                                    COMMENCER
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Controls -->
+                    <div class="mt-4 flex justify-center gap-4 md:hidden">
+                        <button (click)="moveLeft()" 
+                                class="px-6 py-3 bg-gray-700 hover:bg-orange-500 text-white rounded-lg font-medium transition-all duration-300">
+                            ← GAUCHE
+                        </button>
+                        <button (click)="moveRight()" 
+                                class="px-6 py-3 bg-gray-700 hover:bg-orange-500 text-white rounded-lg font-medium transition-all duration-300">
+                            DROITE →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Game Instructions -->
+                <!-- <div class="px-6 py-4 border-t border-gray-700 bg-gray-800/30">
+                    <p class="text-xs text-gray-400 mb-2">📖 Comment jouer :</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-400">
+                        <div class="flex items-center gap-2">
+                            <span>🎮 Touches ← → pour déplacer la voiture</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span>📱 Boutons tactiles sur mobile</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span>⚡ La difficulté augmente toutes les 15 secondes</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span>🏆 Survivez le plus longtemps possible !</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex items-center justify-center gap-2">
+                        <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                        <span class="text-xs text-gray-500">Votre voiture (bleue)</span>
+                        <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse ml-3"></div>
+                        <span class="text-xs text-gray-500">Obstacles (rouges)</span>
+                    </div>
+                </div> -->
             </div>
         </div>
     </div>
 </div>
-                
-                <!-- Exemples de questions -->
-                <div class="px-4 py-2 border-t border-gray-700 bg-gray-800/30">
-                    <p class="text-xs text-gray-400 mb-2">💡 Questions suggérées :</p>
-                    <div class="flex flex-wrap gap-2">
-                        <button *ngFor="let question of exampleQuestions" 
-                                (click)="useExampleQuestion(question)"
-                                class="text-xs px-3 py-1.5 bg-gray-700/50 hover:bg-orange-500/20 text-gray-300 hover:text-orange-400 rounded-full transition-all duration-300">
-                            {{ question }}
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Chat Input -->
-                <div class="p-4 border-t border-gray-700 bg-gray-900/50">
-                    <div class="flex gap-3">
-                        <input type="text"
-                               [(ngModel)]="userInput"
-                               (keypress)="handleKeyPress($event)"
-                               placeholder="Posez votre question sur Emmanuel..."
-                               class="flex-1 bg-gray-700/50 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 border border-gray-600">
-                        <button (click)="sendMessage()"
-                                [disabled]="!userInput.trim()"
-                                class="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+<style>
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+@keyframes ping {
+    75%, 100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes road-move {
+    from {
+        top: -10px;
+        transform: translateX(-50%);
+    }
+    to {
+        top: 100%;
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes explosion {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.animate-road-move {
+    animation: road-move 1s linear infinite;
+}
+
+.animate-explosion {
+    animation: explosion 0.3s ease-out forwards;
+}
+</style>
